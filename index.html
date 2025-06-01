@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YOLOv8 Object Detection</title>
+    <style>
+        
+        html, body {
+                height: 100%;
+                margin: 0;
+                display: flex;
+                justify-content: center;  /* horizontal */
+                align-items: center;      /* vertical */
+                background: #1a1a1a;
+                }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            max-width: 1200px;
+            width: 100%;
+            color: white;
+            padding: 20px;
+            background: #1a1a1a;
+            box-sizing: border-box;
+        }
+
+        .project-section {
+            background:rgb(54, 56, 55);
+            padding: 3rem;
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 4px 6px rgba(53, 53, 53, 0.1);
+
+        }
+        h1 {
+            color: #28a745;
+            margin-bottom: 1.0rem;
+        }
+        .instructions {
+            color: #cccccc;
+            font-size: 1.1rem;
+            margin-bottom: 1.0rem;
+        }
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        input[type="file"] {
+            padding: 8px;
+            font-size: 0.9rem;
+            border: 2px solid #28a745;
+            border-radius: 6px;
+            background: #212529;
+            color: white;
+        }
+        .primary-btn {
+            padding: 12px 24px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .primary-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .note {
+            color: #cccccc;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        /* Full-screen layout */
+        body, html {
+            height: 100%;
+            width: 100%%
+            margin: 0;
+            padding: 0;
+            align-items: center;
+        }
+        .project-section {
+            max-width: 1200px; /* Center container */
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+        .display-section {
+            margin-top: 2rem;
+            display: grid;
+            gap: 20px;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+        }
+        .media-box {
+            max-width: 600px; /* NEW: Limit box width */
+            margin: 0 auto; /* Center horizontally */
+            border-radius: 8px;
+            overflow: hidden;
+            background: #1a1a1a;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column; /* Stack title above media */
+            align-items: center;
+            text-align: center;
+        }
+        .media-box h3 {
+            margin: 0.5rem;
+            color: white;
+            background: rgba(0,0,0,0.2);
+            padding: 0.5rem;
+        }
+        .media-content {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .media-box img, .media-box video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* Add container override */
+        body, .project-section {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+            height: 300px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="project-section">
+        <h1>Object Detection Portal</h1>
+        <p class="instructions">Upload videos up to 15 seconds for best results.</p>
+        <form method="post" enctype="multipart/form-data" class="upload-form">
+            <input type="file" name="file" required accept=".jpg,.jpeg,.png,.mp4,.avi">
+            <button type="submit" class="primary-btn">Process Media</button>
+            <small class="note">Supported formats: JPG/PNG images | MP4/AVI videos</small>
+        </form>
+        
+        {% if original_file and result_file %}
+        <div class="display-section">
+            <div class="media-box">
+                <h3>Original File:</h3>
+                <div class="media-content">
+                    {% if original_file.endswith('.mp4') or original_file.endswith('.avi') %}
+                        <video controls>
+                            <source src="{{ url_for('input_file', filename=original_file) }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    {% else %}
+                        <img src="{{ url_for('input_file', filename=original_file) }}" alt="Original Image">
+                    {% endif %}
+                </div>
+            </div>
+            <div class="media-box">
+                <h3>Processed File:</h3>
+                <div class="media-content">
+                    {% if result_file.endswith('.mp4') or result_file.endswith('.avi') %}
+                        <video controls>
+                            <source src="{{ url_for('output_file', filename=result_file) }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    {% else %}
+                        <img src="{{ url_for('output_file', filename=result_file) }}" alt="Processed Image">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
